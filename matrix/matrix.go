@@ -1,4 +1,4 @@
-package main
+package matrix
 
 import (
 	"crypto/rand"
@@ -6,16 +6,13 @@ import (
 	"math/big"
 )
 
-type Reels [][]int
-type Paytable map[int][]int
-
 type Matrix struct {
 	Matrix [][]int
 	Rows   int
 	Cols   int
 }
 
-func (m *Matrix) init(rows int, cols int) {
+func (m *Matrix) Init(rows int, cols int) {
 	m.Matrix = make([][]int, rows)
 	m.Cols = cols
 	m.Rows = rows
@@ -25,7 +22,7 @@ func (m *Matrix) init(rows int, cols int) {
 	}
 }
 
-func (m *Matrix) generateFromReels(reels Reels) error {
+func (m *Matrix) GenerateFromReels(reels [][]int) error {
 	var randIndArr []int
 
 	for i := range reels {

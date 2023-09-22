@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"monte-carlo-simulation/paytable"
 	"os"
+
+	"monte-carlo-simulation/matrix"
+	"monte-carlo-simulation/paytable"
 
 	"github.com/joho/godotenv"
 )
@@ -25,5 +27,19 @@ func main() {
 
 	paytable.ReadFromFile(os.Getenv("PAYTABLE_FILE_PATH"))
 
+	var matrix matrix.Matrix
+	matrix.Init(3, 3)
+	reels := [][]int{
+		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+	}
+
+	err = matrix.GenerateFromReels(reels)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Println(paytable.Paytable)
+	fmt.Println(matrix.Matrix)
 }
