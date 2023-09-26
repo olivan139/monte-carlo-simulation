@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"log"
 	"math/big"
+	"monte-carlo-simulation/paytable"
 )
 
 type Matrix struct {
@@ -49,6 +50,43 @@ func (m *Matrix) GenerateFromReels(reels [][]int) error {
 	return nil
 }
 
-// func (m *Matrix) checkForFreeGames(scatter int) int {
+func transpose(a [][]int) [][]int {
+	newArr := make([][]int, len(a))
+	for i := 0; i < len(a); i++ {
+		for j := 0; j < len(a[0]); j++ {
+			newArr[j] = append(newArr[j], a[i][j])
+		}
+	}
 
-// }
+	return newArr
+}
+
+func (m *Matrix) CheckForFreeGames(scatter int) int {
+	transposedMatrix := transpose(m.Matrix)
+	numOfScatters := 0
+	for i := range transposedMatrix {
+		for j := range transposedMatrix[i] {
+			if scatter == transposedMatrix[i][j] {
+				numOfScatters++
+				break
+			}
+		}
+	}
+
+	return paytable.Desc.FreeGames[numOfScatters]
+}
+
+func (m *Matrix) getScatterPayoff(scatter int) int {
+	transposedMatrix := transpose(m.Matrix)
+	numOfScatters := 0
+	for i := range transposedMatrix {
+		for j := range transposedMatrix[i] {
+			if scatter == transposedMatrix[i][j] {
+				numOfScatters++
+				break
+			}
+		}
+	}
+
+	return paytable.Desc.Paytable[scatter][numOfScatters]
+}

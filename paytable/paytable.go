@@ -1,34 +1,29 @@
 package paytable
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
-	"strconv"
-	"strings"
 )
 
-type PaytableType map[int][]int
+type Description struct {
+	MultiplySymbol int     `json:"multiply_symbol"`
+	WildSymbol     int     `json:"wild_symbol"`
+	ScatterSymbol  int     `json:"scatter_symbol"`
+	Paytable       [][]int `json:"paytable"`
+	FreeGames      []int   `json:"free_games"`
+}
 
-var Paytable PaytableType
+var Desc Description
 
-func ReadFromFile(filename string) {
+func ParseDescriptionJSON(filename string) {
 	fileBytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	Paytable = make(map[int][]int)
-	slice := strings.Split(string(fileBytes), "\n")
-
-	for i := range slice {
-		digitsSlice := strings.Split(slice[i], ", ")
-		for j := range digitsSlice {
-			val, err := strconv.Atoi(digitsSlice[j])
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			Paytable[i] = append(Paytable[i], val)
-		}
+	err = json.Unmarshal(fileBytes, &Desc)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

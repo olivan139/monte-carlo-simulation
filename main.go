@@ -31,7 +31,7 @@ func main() {
 		log.Fatal("No file path was given, check .env file\n")
 	}
 
-	paytable.ReadFromFile(os.Getenv("PAYTABLE_FILE_PATH"))
+	paytable.ParseDescriptionJSON(filePath)
 
 	var matrix matrix.Matrix
 	matrix.Init(3, 3)
@@ -46,7 +46,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(paytable.Paytable)
+	fmt.Println(paytable.Desc.Paytable)
 	fmt.Println(matrix.Matrix)
 
 	defer log.Fatal("Application finished successfully")
