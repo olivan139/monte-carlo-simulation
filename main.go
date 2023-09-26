@@ -36,9 +36,9 @@ func main() {
 	var matrix matrix.Matrix
 	matrix.Init(3, 3)
 	reels := [][]int{
-		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
-		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
-		[]int{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+		{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+		{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
+		{1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8},
 	}
 
 	err = matrix.GenerateFromReels(reels)
