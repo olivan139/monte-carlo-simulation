@@ -13,6 +13,11 @@ import (
 )
 
 func main() {
+	if _, err := os.Stat("logs/"); os.IsNotExist(err) {
+		if err = os.Mkdir("logs", os.ModePerm); err != nil {
+			log.Fatal(err)
+		}
+	}
 	file, err := os.OpenFile("logs/logs "+string(time.Now().Format("2006-01-02T15:04:05"))+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Panic(err)
