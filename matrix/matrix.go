@@ -124,5 +124,18 @@ func GetLinePayoff(winLine []int) int {
 		return gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine]
 	}
 
-	return helper.Max(gameDescription.Desc.Paytable[mainSymbol][symbolCount+wildCount], gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine])
+	return helper.Max(gameDescription.Desc.Paytable[mainSymbol][symbolCount+wildCount],
+		gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine])
+}
+
+func (m *Matrix) GetMultiplierCount() int {
+	transposedMatrix := helper.Transpose(m.Matrix)
+	counter := 0
+	for i := range transposedMatrix[gameDescription.Desc.MultiplyReelNum] {
+		if transposedMatrix[gameDescription.Desc.MultiplyReelNum][i] == gameDescription.Desc.MultiplySymbol {
+			counter++
+		}
+	}
+
+	return counter
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -50,19 +49,6 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-
-	fmt.Println(gameDescription.Desc.Paytable)
-	fmt.Println(mat.Matrix)
-
-	fmt.Println(matrix.GetLinePayoff([]int{0, 0, 0, 0, 0}))
-	fmt.Println(matrix.GetLinePayoff([]int{10, 10, 0, 0, 0}))
-	fmt.Println(matrix.GetLinePayoff([]int{10, 10, 10, 10, 0}))
-	fmt.Println(matrix.GetLinePayoff([]int{0, 1, 2, 3, 4}))
-	fmt.Println(matrix.GetLinePayoff([]int{3, 3, 10, 4, 3}))
-	fmt.Println(matrix.GetLinePayoff([]int{5, 5, 5, 5, 10}))
-	fmt.Println(matrix.GetLinePayoff([]int{10, 5, 5, 4, 0}))
-	fmt.Println(matrix.GetLinePayoff([]int{5, 5, 5, 5, 5}))
-	fmt.Println(matrix.GetLinePayoff([]int{10, 10, 10, 10, 10}))
 
 	log.Fatal("Application finished successfully")
 }
