@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"log"
 	"math/big"
+
 	"monte-carlo-simulation/gameDescription"
 	"monte-carlo-simulation/helper"
 )
@@ -28,7 +29,7 @@ func (m *Matrix) GenerateFromReels(reels [][]int) error {
 	var randIndArr []int
 
 	for i := range reels {
-		index, err := rand.Int(rand.Reader, big.NewInt(int64(len(reels[i])-1)))
+		index, err := rand.Int(rand.Reader, big.NewInt(int64(len(reels[i]))))
 		if err != nil {
 			log.Panic(err)
 			return err
@@ -81,6 +82,46 @@ func (m *Matrix) GetScatterPayoff() int {
 	return gameDescription.Desc.Paytable[gameDescription.Desc.ScatterSymbol][numOfScatters]
 }
 
+func GetLinePayoff2(winLine []int) int {
+	win := 0
+	wild_count := 0
+	symbol_count := 0
+	main_symbol := 0
+	lastSymbol := 0
+	lastindex := 0
+	for index, symbol := range winLine {
+		if symbol == gameDescription.Desc.WildSymbol {
+			wild_count += 1
+		}
+
+		if symbol != gameDescription.Desc.WildSymbol {
+			main_symbol = winLine[index]
+			lastSymbol = winLine[index]
+			lastindex = index
+			break
+		}
+	}
+
+	if wild_count == 5 {
+		win = gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count]
+	} else {
+		for lastSymbol == main_symbol || lastSymbol == gameDescription.Desc.WildSymbol {
+			symbol_count++
+			lastindex++
+			if lastindex == len(winLine) {
+				break
+			}
+			lastSymbol = winLine[lastindex]
+		}
+		win = helper.Max(gameDescription.Desc.Paytable[main_symbol][symbol_count+wild_count], gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count])
+		if main_symbol == gameDescription.Desc.ScatterSymbol {
+			win = gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count]
+		}
+	}
+
+	return win
+}
+
 func GetLinePayoff(winLine []int) int {
 
 	frstSymbol := winLine[0]
@@ -123,7 +164,9 @@ func GetLinePayoff(winLine []int) int {
 	if mainSymbol == -1 {
 		return gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine]
 	}
-
+	if mainSymbol == gameDescription.Desc.ScatterSymbol {
+		return gameDescription.Desc.Paytable[gameDescription.Desc.ScatterSymbol][symbolCount]
+	}
 	return helper.Max(gameDescription.Desc.Paytable[mainSymbol][symbolCount+wildCount],
 		gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine])
 }
