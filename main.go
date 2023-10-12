@@ -36,11 +36,14 @@ func main() {
 		log.Panic("No file path was given, check .env file\n")
 	}
 
-	model.ParseDescriptionJSON(filePath)
+	model.ParseJSON(filePath)
 
 	start := time.Now()
-	simulation.StartSimulation(10000000)
+
+	simulation.Start()
+
 	elapsed := time.Since(start)
+
 	fmt.Printf("Time passed: %v\n", elapsed)
 	log.Fatal("Application finished successfully")
 }

@@ -4,61 +4,116 @@ import (
 	"fmt"
 	"monte-carlo-simulation/matrix"
 	"monte-carlo-simulation/model"
+	"sync"
 )
 
-func StartSimulation(iter int) {
-	m := 0
-	c := 0
-	o := 0
-	totalBet := 0
-	totalWin := 0
+// var STOP_SPINNER bool = false
 
+type Result struct {
+	TotalWin        int
+	TotalBet        int
+	MultSymbolCount int
+	MultValueCount  int
+	FreeSpinsCount  int
+}
+
+// func spinner(delay time.Duration, ch chan bool) {
+// 	for !STOP_SPINNER {
+// 		for i := range model.Parrot.ParrotAnimFrames {
+// 			fmt.Print("\033[H\033[2J\r")
+// 			for j := range model.Parrot.ParrotAnimFrames[i] {
+// 				fmt.Printf(model.Parrot.ParrotAnimFrames[i][j])
+// 			}
+// 			time.Sleep(delay)
+// 		}
+// 	}
+
+// 	fmt.Printf("\r\r")
+// 	ch <- true
+// }
+
+func Start() {
+	ch := make(chan Result, model.Model.NumOfIterations)
+	wg := sync.WaitGroup{}
 	spinBet := 1
-	var mat matrix.Matrix
-	mat.Init(3, 5)
+	var finalResult Result
 
-	for i := 0; i < iter; i++ {
-		totalBet += spinBet
-		mat.GenerateFromReels(model.Model.Reels)
-		spinWin := 0
-		for _, line := range model.Model.Lines {
-			winLine := []int{mat.Matrix[line[0]][0], mat.Matrix[line[1]][1], mat.Matrix[line[2]][2], mat.Matrix[line[3]][3], mat.Matrix[line[4]][4]}
-			spinWin += matrix.GetLinePayoff(winLine)
-		}
+	// chSpinner := make(chan bool)
+	// go spinner(time.Millisecond*50, chSpinner)
 
-		spinWin += mat.GetScatterPayoff()
-		numOfFreeGames := mat.CheckForFreeGames()
-		spinWinAdd, o1, m1, c1 := countSpinWinForFreeGames(numOfFreeGames)
-
-		totalWin += spinWin + spinWinAdd
-		o += o1
-		m += m1
-		c += c1
-		if i%100000 == 0 {
-			fmt.Println(float32(totalWin)/float32(totalBet)*100.0, i, float32(m)/float32(c+1), float32(c)/float32(i+1), float32(m)/float32(i+1), float32(o)/float32(c+1), float32(o)/float32(i+1))
-		}
+	for i := 0; i < model.Model.NumOfIterations; i++ {
+		go countSpin(ch, spinBet, &wg)
 	}
 
+	wg.Wait()
+
+	close(ch)
+
+	for result := range ch {
+		finalResult.FreeSpinsCount += result.FreeSpinsCount
+		finalResult.MultSymbolCount += result.MultSymbolCount
+		finalResult.MultValueCount += result.MultValueCount
+		finalResult.TotalBet += result.TotalBet
+		finalResult.TotalWin += result.TotalWin
+	}
+
+	// STOP_SPINNER = true
+	// <-chSpinner
+	// close(chSpinner)
+
+	RTPVal := float32(finalResult.TotalWin) / float32(finalResult.TotalBet)
+	avgMultVal := float32(finalResult.MultValueCount) / float32(finalResult.FreeSpinsCount+1)
+	avgFreeGamesVal := float32(finalResult.FreeSpinsCount) / float32(model.Model.NumOfIterations)
+
+	fmt.Printf("Number of iterations: %v mln.\nRTP: %v\nAVG mult value per free games: %v\nAVG number of free games: %v\n", float32(model.Model.NumOfIterations)/1000000., RTPVal, avgMultVal, avgFreeGamesVal)
+}
+
+func countSpin(ch chan Result, spinBet int, wg *sync.WaitGroup) {
+	wg.Add(1)
+	defer wg.Done()
+
+	var result Result
+	var mat matrix.Matrix
+
+	mat.Init(3, 5)
+	mat.GenerateFromReels(model.Model.Reels)
+
+	for _, line := range model.Model.Lines {
+		winLine := []int{mat.Matrix[line[0]][0], mat.Matrix[line[1]][1], mat.Matrix[line[2]][2], mat.Matrix[line[3]][3], mat.Matrix[line[4]][4]}
+		result.TotalWin += matrix.GetLinePayoff(winLine)
+	}
+
+	result.TotalWin += mat.GetScatterPayoff()
+	numOfFreeGames := mat.CheckForFreeGames()
+
+	spinWinAdd := 0
+	spinWinAdd, result.MultSymbolCount, result.MultValueCount, result.FreeSpinsCount = countSpinWinForFreeGames(numOfFreeGames)
+	result.TotalWin += spinWinAdd
+	result.TotalBet += spinBet
+
+	ch <- result
 }
 
 func countSpinWinForFreeGames(numOfFreeGames int) (int, int, int, int) {
 	var mat matrix.Matrix
 	mat.Init(3, 5)
+
 	spinWin := 0
 	multiply := 2
-	o := 0
-	m := 0
-	c := 0
+	multSymbolCount := 0
+	multValueCount := 0
+	mreeSpinsCount := 0
+
 	for numOfFreeGames > 0 {
 		numOfFreeGames--
 		mat.GenerateFromReels(model.Model.FreeGamesReels)
 		multiply += mat.GetMultiplierCount()
 		if mat.GetMultiplierCount() != 0 {
-			o += 1
+			multSymbolCount += 1
 		}
 
-		m += multiply
-		c += 1
+		multValueCount += multiply
+		mreeSpinsCount += 1
 
 		for _, line := range model.Model.Lines {
 			winLine := []int{mat.Matrix[line[0]][0], mat.Matrix[line[1]][1], mat.Matrix[line[2]][2], mat.Matrix[line[3]][3], mat.Matrix[line[4]][4]}
@@ -68,5 +123,5 @@ func countSpinWinForFreeGames(numOfFreeGames int) (int, int, int, int) {
 		spinWin += multiply * mat.GetScatterPayoff()
 	}
 
-	return spinWin, o, m, c
+	return spinWin, multSymbolCount, multValueCount, mreeSpinsCount
 }

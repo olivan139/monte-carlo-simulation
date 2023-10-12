@@ -82,46 +82,6 @@ func (m *Matrix) GetScatterPayoff() int {
 	return model.Model.Paytable[model.Model.ScatterSymbol][numOfScatters]
 }
 
-func GetLinePayoff2(winLine []int) int {
-	win := 0
-	wild_count := 0
-	symbol_count := 0
-	main_symbol := 0
-	lastSymbol := 0
-	lastindex := 0
-	for index, symbol := range winLine {
-		if symbol == model.Model.WildSymbol {
-			wild_count += 1
-		}
-
-		if symbol != model.Model.WildSymbol {
-			main_symbol = winLine[index]
-			lastSymbol = winLine[index]
-			lastindex = index
-			break
-		}
-	}
-
-	if wild_count == 5 {
-		win = model.Model.Paytable[model.Model.WildSymbol][wild_count]
-	} else {
-		for lastSymbol == main_symbol || lastSymbol == model.Model.WildSymbol {
-			symbol_count++
-			lastindex++
-			if lastindex == len(winLine) {
-				break
-			}
-			lastSymbol = winLine[lastindex]
-		}
-		win = helper.Max(model.Model.Paytable[main_symbol][symbol_count+wild_count], model.Model.Paytable[model.Model.WildSymbol][wild_count])
-		if main_symbol == model.Model.ScatterSymbol {
-			win = model.Model.Paytable[model.Model.WildSymbol][wild_count]
-		}
-	}
-
-	return win
-}
-
 func GetLinePayoff(winLine []int) int {
 
 	frstSymbol := winLine[0]

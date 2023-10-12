@@ -7,6 +7,7 @@ import (
 )
 
 type Description struct {
+	NumOfIterations int      `json:"num_of_iterations"`
 	MultiplySymbol  int      `json:"multiply_symbol"`
 	MultiplyValue   int      `json:"multiply_value"`
 	MultiplyReelNum int      `json:"multiply_reel"`
@@ -21,9 +22,14 @@ type Description struct {
 	ScatterTypes    []string `json:"scatter_type_enum"`
 }
 
-var Model *Description
+type ParrotSpriteSheet struct {
+	ParrotAnimFrames [][]string `json:"frames"`
+}
 
-func ParseDescriptionJSON(filename string) {
+var Model *Description
+var Parrot *ParrotSpriteSheet
+
+func ParseJSON(filename string) {
 	fileBytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Panic(err)
