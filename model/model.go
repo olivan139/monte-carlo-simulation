@@ -1,4 +1,4 @@
-package gameDescription
+package model
 
 import (
 	"encoding/json"
@@ -15,11 +15,13 @@ type Description struct {
 	Paytable        [][]int  `json:"paytable"`
 	FreeGames       []int    `json:"free_games"`
 	Lines           [][]int  `json:"lines"`
+	Reels           [][]int  `json:"reels"`
+	FreeGamesReels  [][]int  `json:"free_games_reels"`
 	ScatterType     string   `json:"scatter_type"`
 	ScatterTypes    []string `json:"scatter_type_enum"`
 }
 
-var Desc Description
+var Model *Description
 
 func ParseDescriptionJSON(filename string) {
 	fileBytes, err := ioutil.ReadFile(filename)
@@ -27,16 +29,16 @@ func ParseDescriptionJSON(filename string) {
 		log.Panic(err)
 	}
 
-	err = json.Unmarshal(fileBytes, &Desc)
+	err = json.Unmarshal(fileBytes, &Model)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	for i := range Desc.ScatterTypes {
-		if Desc.ScatterType == Desc.ScatterTypes[i] {
+	for i := range Model.ScatterTypes {
+		if Model.ScatterType == Model.ScatterTypes[i] {
 			return
 		}
 	}
 
-	log.Panicf("undefined scatter type: \"%v\" not found in scatter types\n", Desc.ScatterType)
+	log.Panicf("undefined scatter type: \"%v\" not found in scatter types\n", Model.ScatterType)
 }

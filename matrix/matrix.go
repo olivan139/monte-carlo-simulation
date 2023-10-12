@@ -5,8 +5,8 @@ import (
 	"log"
 	"math/big"
 
-	"monte-carlo-simulation/gameDescription"
 	"monte-carlo-simulation/helper"
+	"monte-carlo-simulation/model"
 )
 
 type Matrix struct {
@@ -57,14 +57,14 @@ func (m *Matrix) CheckForFreeGames() int {
 	numOfScatters := 0
 	for i := range transposedMatrix {
 		for j := range transposedMatrix[i] {
-			if gameDescription.Desc.ScatterSymbol == transposedMatrix[i][j] {
+			if model.Model.ScatterSymbol == transposedMatrix[i][j] {
 				numOfScatters++
 				break
 			}
 		}
 	}
 
-	return gameDescription.Desc.FreeGames[numOfScatters]
+	return model.Model.FreeGames[numOfScatters]
 }
 
 func (m *Matrix) GetScatterPayoff() int {
@@ -72,14 +72,14 @@ func (m *Matrix) GetScatterPayoff() int {
 	numOfScatters := 0
 	for i := range transposedMatrix {
 		for j := range transposedMatrix[i] {
-			if gameDescription.Desc.ScatterSymbol == transposedMatrix[i][j] {
+			if model.Model.ScatterSymbol == transposedMatrix[i][j] {
 				numOfScatters++
 				break
 			}
 		}
 	}
 
-	return gameDescription.Desc.Paytable[gameDescription.Desc.ScatterSymbol][numOfScatters]
+	return model.Model.Paytable[model.Model.ScatterSymbol][numOfScatters]
 }
 
 func GetLinePayoff2(winLine []int) int {
@@ -90,11 +90,11 @@ func GetLinePayoff2(winLine []int) int {
 	lastSymbol := 0
 	lastindex := 0
 	for index, symbol := range winLine {
-		if symbol == gameDescription.Desc.WildSymbol {
+		if symbol == model.Model.WildSymbol {
 			wild_count += 1
 		}
 
-		if symbol != gameDescription.Desc.WildSymbol {
+		if symbol != model.Model.WildSymbol {
 			main_symbol = winLine[index]
 			lastSymbol = winLine[index]
 			lastindex = index
@@ -103,9 +103,9 @@ func GetLinePayoff2(winLine []int) int {
 	}
 
 	if wild_count == 5 {
-		win = gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count]
+		win = model.Model.Paytable[model.Model.WildSymbol][wild_count]
 	} else {
-		for lastSymbol == main_symbol || lastSymbol == gameDescription.Desc.WildSymbol {
+		for lastSymbol == main_symbol || lastSymbol == model.Model.WildSymbol {
 			symbol_count++
 			lastindex++
 			if lastindex == len(winLine) {
@@ -113,9 +113,9 @@ func GetLinePayoff2(winLine []int) int {
 			}
 			lastSymbol = winLine[lastindex]
 		}
-		win = helper.Max(gameDescription.Desc.Paytable[main_symbol][symbol_count+wild_count], gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count])
-		if main_symbol == gameDescription.Desc.ScatterSymbol {
-			win = gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wild_count]
+		win = helper.Max(model.Model.Paytable[main_symbol][symbol_count+wild_count], model.Model.Paytable[model.Model.WildSymbol][wild_count])
+		if main_symbol == model.Model.ScatterSymbol {
+			win = model.Model.Paytable[model.Model.WildSymbol][wild_count]
 		}
 	}
 
@@ -131,7 +131,7 @@ func GetLinePayoff(winLine []int) int {
 	symbolCount := 0
 	mainSymbol := -1
 
-	if frstSymbol == gameDescription.Desc.WildSymbol {
+	if frstSymbol == model.Model.WildSymbol {
 		wildCount++
 		wildCountAsLine++
 		wildAsLine = true
@@ -141,7 +141,7 @@ func GetLinePayoff(winLine []int) int {
 	}
 
 	for i := 1; i < len(winLine); i++ {
-		if winLine[i] != gameDescription.Desc.WildSymbol {
+		if winLine[i] != model.Model.WildSymbol {
 			wildAsLine = false
 
 			if mainSymbol == -1 {
@@ -162,20 +162,20 @@ func GetLinePayoff(winLine []int) int {
 	}
 
 	if mainSymbol == -1 {
-		return gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine]
+		return model.Model.Paytable[model.Model.WildSymbol][wildCountAsLine]
 	}
-	if mainSymbol == gameDescription.Desc.ScatterSymbol {
-		return gameDescription.Desc.Paytable[gameDescription.Desc.ScatterSymbol][symbolCount]
+	if mainSymbol == model.Model.ScatterSymbol {
+		return model.Model.Paytable[model.Model.ScatterSymbol][symbolCount]
 	}
-	return helper.Max(gameDescription.Desc.Paytable[mainSymbol][symbolCount+wildCount],
-		gameDescription.Desc.Paytable[gameDescription.Desc.WildSymbol][wildCountAsLine])
+	return helper.Max(model.Model.Paytable[mainSymbol][symbolCount+wildCount],
+		model.Model.Paytable[model.Model.WildSymbol][wildCountAsLine])
 }
 
 func (m *Matrix) GetMultiplierCount() int {
 	transposedMatrix := helper.Transpose(m.Matrix)
 	counter := 0
-	for i := range transposedMatrix[gameDescription.Desc.MultiplyReelNum] {
-		if transposedMatrix[gameDescription.Desc.MultiplyReelNum][i] == gameDescription.Desc.MultiplySymbol {
+	for i := range transposedMatrix[model.Model.MultiplyReelNum] {
+		if transposedMatrix[model.Model.MultiplyReelNum][i] == model.Model.MultiplySymbol {
 			counter++
 		}
 	}

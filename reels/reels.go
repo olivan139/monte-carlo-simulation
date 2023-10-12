@@ -3,16 +3,16 @@ package reels
 import (
 	"fmt"
 	"log"
-	"monte-carlo-simulation/gameDescription"
+	"monte-carlo-simulation/model"
 
 	"gonum.org/v1/gonum/mat"
 )
 
 func GetCombinationWeights() {
 	var coeffArr []float64
-	for i := range gameDescription.Desc.Paytable {
-		for j := range gameDescription.Desc.Paytable[i] {
-			coeffArr = append(coeffArr, float64(gameDescription.Desc.Paytable[i][j]))
+	for i := range model.Model.Paytable {
+		for j := range model.Model.Paytable[i] {
+			coeffArr = append(coeffArr, float64(model.Model.Paytable[i][j]))
 		}
 	}
 	coefficients := mat.NewDense(1, len(coeffArr), coeffArr)

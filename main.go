@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"monte-carlo-simulation/gameDescription"
-	"monte-carlo-simulation/reels"
+	"monte-carlo-simulation/model"
+	"monte-carlo-simulation/simulation"
 
 	"github.com/joho/godotenv"
 )
@@ -36,12 +36,11 @@ func main() {
 		log.Panic("No file path was given, check .env file\n")
 	}
 
-	gameDescription.ParseDescriptionJSON(filePath)
+	model.ParseDescriptionJSON(filePath)
 
 	start := time.Now()
-	//simulation.StartSimulation()
+	simulation.StartSimulation(10000000)
 	elapsed := time.Since(start)
-	reels.GetCombinationWeights()
-	fmt.Printf("Time passed: %v", elapsed)
+	fmt.Printf("Time passed: %v\n", elapsed)
 	log.Fatal("Application finished successfully")
 }
