@@ -1,7 +1,7 @@
 # RTP calculator
 basic RTP calculator for Slot Games with Free Games and multipliers. Monte Carlo simulation was used.
 ## How it works?
-It takes initial parameters from **model.json**:
+It takes initial parameters from **example.json**:
 - number of iterations
 - multiply symbol number
 - multiply value
@@ -29,7 +29,7 @@ The more iterations, the more precise RTP.
 After getting or calculating reels for the game, one should check its validity. It can be done mathematically for simple slot games, but not that easy for complicated ones. That is why it is easier to simulate player activity and calculate average RTP and check if it is what we expected.
 
 ## Vocabulary
-**RTP** - *return to player*. Basically, total_win / total_bet
+**RTP** - *return to player*. Basically, $\frac{total \textunderscore win}{total \textunderscore bet} \cdot 100$\% 
 
 *Example:*
 Player has made **n** number of spins, where **n** tends to infinity. His total win is 95$ and his total bet is 100$. Then the RTP is 95%.
@@ -42,7 +42,6 @@ Player has made **n** number of spins, where **n** tends to infinity. His total 
 
 
 **wild symbol** - symbol that can play as any symbol in specific combinations (except scatter and multiplier symbol).
-
 
 *Example:*
 Player gets such line: *[lemon wild lemon lemon lemon]*. Instead of getting nothing, player gets payoff as it would be *[lemon lemon lemon lemon lemon]*
