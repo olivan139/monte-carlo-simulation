@@ -1,0 +1,40 @@
+{
+    "num_of_iterations" : 10000000,
+    "multiply_symbol" : 1,
+    "multiply_value" : 2,
+    "multiply_reel" : 2,
+    "wild_symbol" : 10,
+    "scatter_symbol" : 11,
+    "paytable" : [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ],
+    "free_games" : [0, 0, 0, 0, 0, 0],
+    "lines" : [
+        [0, 0, 0, 0, 0]
+    ],
+    "reels" :  [
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5]
+    ],
+    "free_games_reels" : [
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5]
+    ],
+    "scatter_type" : "classic_payoff",
+    "scatter_type_enum" : ["classic_payoff", "classic_no_payoff", "order_matters_payoff", "order_matters_no_payoff"]
+}
