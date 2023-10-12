@@ -30,10 +30,19 @@ After getting or calculating reels for the game, one should check its validity. 
 
 ## Vocabulary
 **RTP** - *return to player*. Basically, total_win / total_bet
+
 *Example:*
 Player has made **n** number of spins, where **n** tends to infinity. His total win is 95$ and his total bet is 100$. Then the RTP is 95%.
+
+
 **reel** - is a an array of columns with specific order of symbols, that simulates physical reel in real-life slot machine. The code randomly picks window of symbols with a specified size.
+
+
 **scatter** - special symbol. When player gets a combination(depends on game logic) of this symbol, slot game gives him a specified number of free games.
+
+
 **wild symbol** - symbol that can play as any symbol in specific combinations (except scatter and multiplier symbol).
+
+
 *Example:*
 Player gets such line: *[lemon wild lemon lemon lemon]*. Instead of getting nothing, player gets payoff as it would be *[lemon lemon lemon lemon lemon]*
