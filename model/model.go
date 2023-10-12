@@ -22,12 +22,7 @@ type Description struct {
 	ScatterTypes    []string `json:"scatter_type_enum"`
 }
 
-type ParrotSpriteSheet struct {
-	ParrotAnimFrames [][]string `json:"frames"`
-}
-
 var Model *Description
-var Parrot *ParrotSpriteSheet
 
 func ParseJSON(filename string) {
 	fileBytes, err := ioutil.ReadFile(filename)

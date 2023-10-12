@@ -7,8 +7,6 @@ import (
 	"sync"
 )
 
-// var STOP_SPINNER bool = false
-
 type Result struct {
 	TotalWin        int
 	TotalBet        int
@@ -17,29 +15,11 @@ type Result struct {
 	FreeSpinsCount  int
 }
 
-// func spinner(delay time.Duration, ch chan bool) {
-// 	for !STOP_SPINNER {
-// 		for i := range model.Parrot.ParrotAnimFrames {
-// 			fmt.Print("\033[H\033[2J\r")
-// 			for j := range model.Parrot.ParrotAnimFrames[i] {
-// 				fmt.Printf(model.Parrot.ParrotAnimFrames[i][j])
-// 			}
-// 			time.Sleep(delay)
-// 		}
-// 	}
-
-// 	fmt.Printf("\r\r")
-// 	ch <- true
-// }
-
 func Start() {
 	ch := make(chan Result, model.Model.NumOfIterations)
 	wg := sync.WaitGroup{}
 	spinBet := 1
 	var finalResult Result
-
-	// chSpinner := make(chan bool)
-	// go spinner(time.Millisecond*50, chSpinner)
 
 	for i := 0; i < model.Model.NumOfIterations; i++ {
 		go countSpin(ch, spinBet, &wg)
@@ -56,10 +36,6 @@ func Start() {
 		finalResult.TotalBet += result.TotalBet
 		finalResult.TotalWin += result.TotalWin
 	}
-
-	// STOP_SPINNER = true
-	// <-chSpinner
-	// close(chSpinner)
 
 	RTPVal := float32(finalResult.TotalWin) / float32(finalResult.TotalBet)
 	avgMultVal := float32(finalResult.MultValueCount) / float32(finalResult.FreeSpinsCount+1)
