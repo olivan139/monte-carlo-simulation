@@ -29,7 +29,7 @@ The more iterations, the more precise RTP.
 After getting or calculating reels for the game, one should check its validity. It can be done mathematically for simple slot games, but not that easy for complicated ones. That is why it is easier to simulate player activity and calculate average RTP and check if it is what we expected.
 
 ## Vocabulary
-**RTP** - *return to player*. Basically, $\frac{total \textunderscore win}{total \textunderscore bet} \cdot 100$\% 
+**RTP** - *return to player*. Basically, $$\frac{\text{total win}}{\text{total bet}} \cdot 100$$
 
 *Example:*
 Player has made **n** number of spins, where **n** tends to infinity. His total win is 95$ and his total bet is 100$. Then the RTP is 95%.
