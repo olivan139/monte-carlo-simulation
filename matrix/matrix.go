@@ -1,9 +1,7 @@
 package matrix
 
 import (
-	"crypto/rand"
-	"log"
-	"math/big"
+	"hash/maphash"
 
 	"monte-carlo-simulation/helper"
 	"monte-carlo-simulation/model"
@@ -25,17 +23,17 @@ func (m *Matrix) Init(rows int, cols int) {
 	}
 }
 
-func (m *Matrix) GenerateFromReels(reels [][]int) error {
+func (m *Matrix) GenerateFromReels(reels [][]int) {
 	var randIndArr []int
 
 	for i := range reels {
-		index, err := rand.Int(rand.Reader, big.NewInt(int64(len(reels[i]))))
-		if err != nil {
-			log.Panic(err)
-			return err
+		outUint64 := new(maphash.Hash).Sum64()
+		out := int(outUint64)
+		if out < 0 {
+			out = -out
 		}
-
-		randIndArr = append(randIndArr, int(index.Uint64()))
+		index := out % len(reels[i])
+		randIndArr = append(randIndArr, index)
 	}
 
 	for i := 0; i < m.Rows; i++ {
@@ -48,8 +46,6 @@ func (m *Matrix) GenerateFromReels(reels [][]int) error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func (m *Matrix) CheckForFreeGames() int {
