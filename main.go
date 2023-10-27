@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"time"
 
 	"monte-carlo-simulation/model"
@@ -13,12 +14,13 @@ import (
 )
 
 func main() {
+	runtime.GOMAXPROCS(8)
 	if _, err := os.Stat("data/logs/"); os.IsNotExist(err) {
 		if err = os.Mkdir("data/logs", os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
 	}
-	file, err := os.OpenFile("data/logs/logs "+string(time.Now().Format("2006-01-02T15:04:05"))+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("data/logs/logs "+string(time.Now().Format("2006-01-02T15:04:05"))+".log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -45,5 +47,5 @@ func main() {
 	elapsed := time.Since(start)
 
 	fmt.Printf("Time passed: %v\n", elapsed)
-	log.Fatal("Application finished successfully")
+	log.Println("Application finished successfully")
 }
